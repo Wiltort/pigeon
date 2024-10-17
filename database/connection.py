@@ -1,6 +1,8 @@
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine
-from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from decouple import config
+from datetime import datetime
+from sqlalchemy import func
 
 
 db_host = config("DB_HOST")
@@ -13,9 +15,9 @@ DATABASE_URL = f"postgresql+asyncpg://{db_user}:{db_pass}@{db_host}:{db_port}/{d
 
 engine = create_async_engine(DATABASE_URL)
 
-async_session_maker = sessionmaker(engine, class_=AsyncSession,
-                                   expire_on_commit=False)
+async_session_maker = async_sessionmaker(engine, class_=AsyncSession)
 
 
 class Base(DeclarativeBase):
-    pass
+    created_at: Mapped[datetime] = mapped_column(server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(server_default=func.now(), onupdate=func.now())
