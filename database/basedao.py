@@ -1,6 +1,11 @@
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
-from sqlalchemy import update as sqlalchemy_update, delete as sqlalchemy_delete, func
+
+# from sqlalchemy import (
+#    update as sqlalchemy_update,
+#    delete as sqlalchemy_delete,
+#    func
+# )
 from database.connection import async_session_maker
 
 
@@ -22,7 +27,7 @@ class BaseDAO:
             return result.scalars().all()
 
     @classmethod
-    async def add(cls, **data):
+    async def add(cls, **values):
         async with async_session_maker() as session:
             async with session.begin():
                 new_instance = cls.model(**values)

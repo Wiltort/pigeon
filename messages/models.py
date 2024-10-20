@@ -3,8 +3,9 @@ from sqlalchemy import Integer, Text, ForeignKey, DateTime, func
 from sqlalchemy.orm import mapped_column, Mapped
 from users.models import User
 
-class PMessages(Base):
-    __tablename__ = "pmessages"
+
+class Message(Base):
+    __tablename__ = "messages"
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, index=True)
     from_user_id: Mapped[int] = mapped_column(Integer, ForeignKey(User.id))
