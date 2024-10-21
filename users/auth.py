@@ -4,8 +4,8 @@ from jose import jwt
 from passlib.context import CryptContext
 from pydantic import EmailStr
 
-# from app.config import settings
-# from app.exceptions import IncorrectEmailOrPasswordException
+from config import get_auth_data
+from routes.exceptions import IncorrectEmailOrPasswordException
 from users.dao import UserDAO
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
@@ -23,7 +23,8 @@ def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + timedelta(days=14)
     to_encode.update({"exp": expire})
-    encoded_jwt = jwt.encode(to_encode, settings.SECRET_KEY, settings.ALGORITHM)
+    auth_data = get_auth_data()
+    encoded_jwt = jwt.encode(to_encode, auth_data['secret_key'], algorithm=auth_data['algorithm'])
     return encoded_jwt
 
 
