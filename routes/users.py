@@ -1,12 +1,17 @@
 from fastapi import APIRouter, Response
 from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
-from routes.exceptions import UserAlreadyExistsException, IncorrectEmailOrPasswordException, PasswordMismatchException, IncorrectTelegramException
+from routes.exceptions import (
+    UserAlreadyExistsException,
+    IncorrectEmailOrPasswordException,
+    PasswordMismatchException,
+    IncorrectTelegramException,
+)
 from users.auth import get_password_hash, authenticate_user, create_access_token
 from users.dao import UsersDAO
 from users.schemas import SUserRegister, SUserAuth
 
-router = APIRouter(prefix='/auth', tags=['Auth'])
+router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/register/")
@@ -24,10 +29,10 @@ async def register_user(user_data: SUserRegister) -> dict:
         name=user_data.name,
         email=user_data.email,
         hashed_password=hashed_password,
-        telegram=user_data.telegram
+        telegram=user_data.telegram,
     )
 
-    return {'message': 'Вы успешно зарегистрированы!'}
+    return {"message": "Вы успешно зарегистрированы!"}
 
 
 @router.post("/login/")
@@ -37,10 +42,15 @@ async def auth_user(response: Response, user_data: SUserAuth):
         raise IncorrectEmailOrPasswordException
     access_token = create_access_token({"sub": str(check.id)})
     response.set_cookie(key="users_access_token", value=access_token, httponly=True)
-    return {'ok': True, 'access_token': access_token, 'refresh_token': None, 'message': 'Авторизация успешна!'}
+    return {
+        "ok": True,
+        "access_token": access_token,
+        "refresh_token": None,
+        "message": "Авторизация успешна!",
+    }
 
 
 @router.post("/logout/")
 async def logout_user(response: Response):
     response.delete_cookie(key="users_access_token")
-    return {'message': 'Пользователь успешно вышел из системы'}
+    return {"message": "Пользователь успешно вышел из системы"}

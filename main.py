@@ -4,7 +4,7 @@ from fastapi.exceptions import HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from routes.exceptions import TokenExpiredException, TokenNoFoundException
-from app.users.router import router as users_router
+from routes.users import router as users_router
 from app.chat.router import router as chat_router
 
 app = FastAPI()

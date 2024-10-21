@@ -12,4 +12,3 @@ class Message(Base):
     to_user_id: Mapped[int] = mapped_column(Integer, ForeignKey(User.id))
     text: Mapped[str] = mapped_column(Text)
     was_sent_at: Mapped[DateTime] = mapped_column(DateTime, default=func.now())
-

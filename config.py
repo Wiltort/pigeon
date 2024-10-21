@@ -16,11 +16,12 @@ settings = Settings()
 def get_auth_data():
     return {"secret_key": settings.SECRET_KEY, "algorithm": settings.ALGORITHM}
 
+
 def get_database_data():
     return {
         "db_host": settings.DB_HOST,
         "db_port": settings.DB_PORT,
         "db_user": settings.DB_USER,
         "db_pass": settings.DB_PASS,
-        "db_name": settings.DB_NAME
+        "db_name": settings.DB_NAME,
     }

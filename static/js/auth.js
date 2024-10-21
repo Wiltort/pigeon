@@ -54,13 +54,13 @@ const handleFormSubmit = async (formType, url, fields) => {
 
 
 
-
-
-document.getElementById('loginForm').addEventListener('submit', function(e) {
+document.getElementById('loginForm').addEventListener('click', async (event) => {
     e.preventDefault();
     // Здесь будет логика отправки данных для входа
-    console.log('Отправка формы входа');
-  });
+    const email = document.querySelector('#loginForm input[type="email"]').value;
+    const password = document.querySelector('#loginForm input[type="password"]').value;
+    await handleFormSubmit('login', 'login/', [email, password]);
+});
 
 document.getElementById('registerForm').addEventListener('submit', function(e) {
     e.preventDefault();
