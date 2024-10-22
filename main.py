@@ -5,14 +5,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from routes.exceptions import TokenExpiredException, TokenNoFoundException
 from routes.users import router as users_router
-from app.chat.router import router as chat_router
+from routes.chat import router as chat_router
 
 app = FastAPI()
-app.mount('/static', StaticFiles(directory='/static'), name='static')
+app.mount("/static", StaticFiles(directory="static"), name="static")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Разрешить запросы с любых источников. Можете ограничить список доменов
+    allow_origins=[
+        "*"
+    ],  # Разрешить запросы с любых источников. Можете ограничить список доменов
     allow_credentials=True,
     allow_methods=["*"],  # Разрешить все методы (GET, POST, PUT, DELETE и т.д.)
     allow_headers=["*"],  # Разрешить все заголовки
