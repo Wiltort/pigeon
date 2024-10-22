@@ -1,0 +1,71 @@
+<html><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pigeon Chat</title>
+    </head>
+    <body>
+      <div class="container">
+        <header>
+          <div class="logo">pigeon</div>
+          <div class="user-info">
+            <span class="username">John Doe</span>
+            <button class="logout-btn">Выход</button>
+          </div>
+        </header>
+        <div class="main-content">
+          <div class="contacts">
+            <button class="new-chat-btn">Добавить новый чат</button>
+            <ul class="contact-list">
+              <li>Alice Smith</li>
+              <li>Bob Johnson</li>
+              <li>Carol Williams</li>
+              <li>David Brown</li>
+            </ul>
+          </div>
+          <div class="chat">
+            <div class="chat-history">
+              <div class="message received">Привет! Как дела?</div>
+              <div class="message sent">Привет! Всё хорошо, спасибо. А у тебя?</div>
+              <div class="message received">Тоже неплохо. Что планируешь на выходные?</div>
+            </div>
+            <div class="chat-input">
+              <input type="text" placeholder="Введите сообщение...">
+              <button>Отправить</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+      <script>
+        // Добавление нового чата
+        document.querySelector('.new-chat-btn').addEventListener('click', () => {
+          const newContact = prompt('Введите имя нового контакта:');
+          if (newContact) {
+            const li = document.createElement('li');
+            li.textContent = newContact;
+            document.querySelector('.contact-list').appendChild(li);
+          }
+        });
+    
+        // Отправка сообщения
+        document.querySelector('.chat-input button').addEventListener('click', () => {
+          const input = document.querySelector('.chat-input input');
+          const message = input.value.trim();
+          if (message) {
+            const div = document.createElement('div');
+            div.className = 'message sent';
+            div.textContent = message;
+            document.querySelector('.chat-history').appendChild(div);
+            input.value = '';
+          }
+        });
+    
+        // Выход из чата
+        document.querySelector('.logout-btn').addEventListener('click', () => {
+          if (confirm('Вы уверены, что хотите выйти?')) {
+            alert('Выход выполнен успешно');
+            // Здесь можно добавить логику для выхода из системы
+          }
+        });
+      </script>
+    </body></html>

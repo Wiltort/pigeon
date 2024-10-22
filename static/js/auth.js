@@ -62,9 +62,26 @@ document.getElementById('loginForm').addEventListener('click', async (event) => 
     await handleFormSubmit('login', 'login/', [email, password]);
 });
 
-document.getElementById('registerForm').addEventListener('submit', function(e) {
+document.getElementById('registerForm').addEventListener('click', async (event) => {
     e.preventDefault();
     // Здесь будет логика отправки данных для регистрации
-    console.log('Отправка формы регистрации');
+    const email = document.querySelector('#registerForm input[type="email"]').value;
+    const username = document.querySelector('#registerForm input[type="text"]')[0].value;
+    const password = document.querySelectorAll('#registerForm input[type="password"]')[0].value;
+    const password_check = document.querySelectorAll('#registerForm input[type="password"]')[1].value;
+    const telegram = document.querySelector('#registerForm input[type="text"]')[1].value;
+
+
+    if (password !== password_check) {
+        alert('Пароли не совпадают.');
+        return;
+    }
+    if (!telegram.startsWith('@')) {
+        alert('Логин телеграм должен начинатся с символа "@"');
+        return;
+    }
+    
+
+    await handleFormSubmit('register', 'register/', [email, username, password, password_check, telegram]);
   });
 
