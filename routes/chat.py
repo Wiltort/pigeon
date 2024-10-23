@@ -33,6 +33,35 @@ async def get_messages(user_id: int, current_user: User = Depends(get_current_us
     )
 
 
+# Активные WebSocket-подключения: {user_id: websocket}
+active_connections: Dict[int, WebSocket] = {}
+
+
+# Функция для отправки сообщения пользователю, если он подключен
+async def notify_user(user_id: int, message: dict):
+    """Отправить сообщение пользователю, если он подключен."""
+    if user_id in active_connections:
+        websocket = active_connections[user_id]
+        # Отправляем сообщение в формате JSON
+        await websocket.send_json(message)
+
+
+# WebSocket эндпоинт для соединений
+@router.websocket("/ws/{user_id}")
+async def websocket_endpoint(websocket: WebSocket, user_id: int):
+    # Принимаем WebSocket-соединение
+    await websocket.accept()
+    # Сохраняем активное соединение для пользователя
+    active_connections[user_id] = websocket
+    try:
+        while True:
+            # Просто поддерживаем соединение активным (1 секунда паузы)
+            await asyncio.sleep(1)
+    except WebSocketDisconnect:
+        # Удаляем пользователя из активных соединений при отключении
+        active_connections.pop(user_id, None)
+
+
 @router.post("/messages", response_model=MessageCreate)
 async def send_message(
     message: MessageCreate, current_user: User = Depends(get_current_user)
@@ -40,13 +69,20 @@ async def send_message(
     # Add new message to the database
     await MessagesDAO.add(
         from_user_id=current_user.id,
-        text=message.content,
-        to_user_id=message.recipient_id,
+        text=message.text,
+        to_user_id=message.to_user_id,
     )
-
+    message_data = {
+        'from_user_id': current_user.id,
+        'to_user_id': message.to_user_id,
+        'text': message.text,
+    }
+    await notify_user(message.to_user_id, message_data)
+    await notify_user(current_user.id, message_data)
     return {
-        "to_user_id": message.recipient_id,
-        "text": message.content,
+        "to_user_id": message.to_user_id,
+        "text": message.text,
         "status": "ok",
         "msg": "Message saved!",
     }
+

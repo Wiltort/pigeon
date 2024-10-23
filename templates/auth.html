@@ -14,7 +14,7 @@
         <form id="loginForm" class="form active">
           <input type="email" placeholder="Email" required>
           <input type="password" placeholder="Пароль" required>
-          <button type="submit">Войти</button>
+          <button id="loginButton" type="submit">Войти</button>
         </form>
         
         <form id="registerForm" class="form">
@@ -23,7 +23,7 @@
           <input type="password" placeholder="Пароль" required>
           <input type="password" placeholder="Подтверждение пароля" required>
           <input type="text" placeholder="Логин Telegram" required>
-          <button type="submit">Зарегистрироваться</button>
+          <button id="registerButton" type="submit">Зарегистрироваться</button>
         </form>
       </div>
       <script src="{{ url_for('static', path='js/auth.js') }}"></script>

@@ -54,7 +54,7 @@ const handleFormSubmit = async (formType, url, fields) => {
 
 
 
-document.getElementById('loginForm').addEventListener('click', async (event) => {
+document.getElementById('loginButton').addEventListener('click', async (event) => {
     e.preventDefault();
     // Здесь будет логика отправки данных для входа
     const email = document.querySelector('#loginForm input[type="email"]').value;
@@ -62,7 +62,7 @@ document.getElementById('loginForm').addEventListener('click', async (event) => 
     await handleFormSubmit('login', 'login/', [email, password]);
 });
 
-document.getElementById('registerForm').addEventListener('click', async (event) => {
+document.getElementById('registerButton').addEventListener('click', async (event) => {
     e.preventDefault();
     // Здесь будет логика отправки данных для регистрации
     const email = document.querySelector('#registerForm input[type="email"]').value;

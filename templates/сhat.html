@@ -9,29 +9,35 @@
         <header>
           <div class="logo">pigeon</div>
           <div class="user-info">
-            <span class="username">John Doe</span>
-            <button class="logout-btn">Выход</button>
+            <span class="username">{{ user.username }}</span>
+            <button id="logoutButton" class="logout-btn" onclick="logout()">Выход</button>
           </div>
         </header>
         <div class="main-content">
           <div class="contacts">
-            <button class="new-chat-btn">Добавить новый чат</button>
-            <ul class="contact-list">
-              <li>Alice Smith</li>
-              <li>Bob Johnson</li>
-              <li>Carol Williams</li>
-              <li>David Brown</li>
+            
+            <ul class="contact-list" id="userList">
+              {% for chat in users_all %}
+              {% if chat.id != user.id %}
+                  <li class="user-item" data-user-id="{{ chat.id }}">
+                      {{ chat.name }}
+                  </li>
+              {% endif %}
+          {% endfor %}
             </ul>
           </div>
           <div class="chat">
-            <div class="chat-history">
+            <div class="chat-header" id="chatHeader">
+              <span>Мини-чат</span>
+            </div>
+            <div class="chat-history" id="messages">
               <div class="message received">Привет! Как дела?</div>
               <div class="message sent">Привет! Всё хорошо, спасибо. А у тебя?</div>
               <div class="message received">Тоже неплохо. Что планируешь на выходные?</div>
             </div>
             <div class="chat-input">
-              <input type="text" placeholder="Введите сообщение...">
-              <button>Отправить</button>
+              <input id="messageInput" type="text" placeholder="Введите сообщение...">
+              <button id="sendButton">Отправить</button>
             </div>
           </div>
         </div>

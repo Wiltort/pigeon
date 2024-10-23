@@ -75,6 +75,10 @@ body, html {
     flex-direction: column;
     padding: 20px;
   }
+  .chat-header {
+    background-color: #4A90E2;
+    color: white;
+  }
   .chat-history {
     flex: 1;
     overflow-y: auto;
