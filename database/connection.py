@@ -4,9 +4,8 @@ from config import get_database_data
 from datetime import datetime
 from sqlalchemy import func
 
-db_data = get_database_data()
 
-DATABASE_URL = f"postgresql+asyncpg://{db_data['db_user']}:{db_data['db_pass']}@{db_data['db_host']}:{db_data['db_port']}/{db_data['db_name']}"
+DATABASE_URL = get_database_data()
 
 engine = create_async_engine(DATABASE_URL)
 
