@@ -5,7 +5,7 @@ function switchTab(tabName) {
     tabs.forEach(tab => tab.classList.remove('active'));
     forms.forEach(form => form.classList.remove('active'));
     
-    document.querySelector(`.tab:nth-child(${tabName === 'login' ? '1' : '2'})`).classList.add('active');
+    document.querySelector(`.tab[data-tab="${tabName}"]`).classList.add('active');
     document.getElementById(`${tabName}Form`).classList.add('active');
   }
 
@@ -55,7 +55,7 @@ const handleFormSubmit = async (formType, url, fields) => {
 
 
 document.getElementById('loginButton').addEventListener('click', async (event) => {
-    e.preventDefault();
+    event.preventDefault();
     // Здесь будет логика отправки данных для входа
     const email = document.querySelector('#loginForm input[type="email"]').value;
     const password = document.querySelector('#loginForm input[type="password"]').value;
@@ -63,13 +63,13 @@ document.getElementById('loginButton').addEventListener('click', async (event) =
 });
 
 document.getElementById('registerButton').addEventListener('click', async (event) => {
-    e.preventDefault();
+    event.preventDefault();
     // Здесь будет логика отправки данных для регистрации
     const email = document.querySelector('#registerForm input[type="email"]').value;
-    const username = document.querySelector('#registerForm input[type="text"]')[0].value;
+    const username = document.querySelectorAll('#registerForm input[type="text"]')[0].value;
     const password = document.querySelectorAll('#registerForm input[type="password"]')[0].value;
     const password_check = document.querySelectorAll('#registerForm input[type="password"]')[1].value;
-    const telegram = document.querySelector('#registerForm input[type="text"]')[1].value;
+    const telegram = document.querySelectorAll('#registerForm input[type="text"]')[1].value;
 
 
     if (password !== password_check) {

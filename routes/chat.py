@@ -11,7 +11,7 @@ import asyncio
 import logging
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
-templates = Jinja2Templates(directory="app/templates")
+templates = Jinja2Templates(directory="templates")
 
 
 # Страница чата
@@ -26,9 +26,7 @@ async def get_chat_page(request: Request, user_data: User = Depends(get_current_
 @router.get("/messages/{user_id}", response_model=List[MessageRead])
 async def get_messages(user_id: int, current_user: User = Depends(get_current_user)):
     return (
-        await MessagesDAO.get_messages_between_users(
-            user_id_1=user_id, user_id_2=current_user.id
-        )
+        await MessagesDAO.get_history(user_id_1=user_id, user_id_2=current_user.id)
         or []
     )
 
@@ -43,6 +41,12 @@ async def notify_user(user_id: int, message: dict):
     if user_id in active_connections:
         websocket = active_connections[user_id]
         # Отправляем сообщение в формате JSON
+        await websocket.send_json(message)
+
+
+async def notify_all_users(message: dict):
+    """Notify all connected users about a new user registration."""
+    for websocket in active_connections.values():
         await websocket.send_json(message)
 
 
@@ -73,16 +77,19 @@ async def send_message(
         to_user_id=message.to_user_id,
     )
     message_data = {
-        'from_user_id': current_user.id,
-        'to_user_id': message.to_user_id,
-        'text': message.text,
+        "from_user_id": current_user.id,
+        "to_user_id": message.to_user_id,
+        "text": message.text,
     }
-    await notify_user(message.to_user_id, message_data)
-    await notify_user(current_user.id, message_data)
+    await notify_user(
+        message.to_user_id, {"event": "new_message", "message": message_data}
+    )
+    await notify_user(
+        current_user.id, {"event": "new_message", "message": message_data}
+    )
     return {
         "to_user_id": message.to_user_id,
         "text": message.text,
         "status": "ok",
         "msg": "Message saved!",
     }
-

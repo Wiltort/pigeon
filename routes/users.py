@@ -11,6 +11,7 @@ from routes.exceptions import (
 from users.auth import get_password_hash, authenticate_user, create_access_token
 from users.dao import UsersDAO
 from users.schemas import SUserRegister, SUserAuth
+from routes.chat import notify_all_users
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -28,13 +29,19 @@ async def register_user(user_data: SUserRegister) -> dict:
     if user_data.telegram[0] != "@":
         raise IncorrectTelegramException()
     hashed_password = get_password_hash(user_data.password)
-    await UsersDAO.add(
-        name=user_data.name,
+    new_user = await UsersDAO.add(
+        username=user_data.username,
         email=user_data.email,
-        hashed_password=hashed_password,
+        password=hashed_password,
         telegram=user_data.telegram,
     )
-
+    new_user_data = {
+        'id': new_user.id,
+        'username': new_user.username,
+        'email': new_user.email,
+        'telegram': new_user.telegram
+    }
+    await notify_all_users({'event': 'new_user', 'user': new_user_data})
     return {"message": "Вы успешно зарегистрированы!"}
 
 
@@ -62,3 +69,4 @@ async def logout_user(response: Response):
 @router.get("/", response_class=HTMLResponse, summary="Страница авторизации")
 async def get_categories(request: Request):
     return templates.TemplateResponse("auth.html", {"request": request})
+

@@ -67,8 +67,13 @@ function connectWebSocket() {
 
     socket.onmessage = (event) => {
         const incomingMessage = JSON.parse(event.data);  // Получаем новое сообщение от сервера
-        if (incomingMessage.to_user_id === selectedUserId) {  // Проверяем, кому адресовано сообщение
-            addMessage(incomingMessage.text, incomingMessage.to_user_id);  // Добавляем сообщение в чат
+        if (incomingMessage.event === 'new_message'){
+            if (incomingMessage.message.to_user_id === selectedUserId) {  // Проверяем, кому адресовано сообщение
+                addMessage(incomingMessage.message.text, incomingMessage.message.to_user_id);  // Добавляем сообщение в чат
+                }
+            }
+        if (incomingMessage.event === 'new_user'){
+            addContact(new_user = incomingMessage.user)
         }
     };
 
@@ -104,6 +109,11 @@ function addMessage(text, to_user_id) {
     const messagesContainer = document.getElementById('messages');
     messagesContainer.insertAdjacentHTML('beforeend', createMessageElement(text, to_user_id));  // Добавляем новое сообщение в конец чата
     messagesContainer.scrollTop = messagesContainer.scrollHeight;  // Прокручиваем чат вниз, чтобы показать последнее сообщение
+}
+
+function addContact(new_user) {
+    const Contacts = document.getElementById('userList');
+    Contacts.insertAdjacentHTML('beforeend', `<div class="user-item" data-user-id="${new_user.id}">${new_user.username}</div>`);
 }
 
 // Формирование HTML-элемента для сообщения
