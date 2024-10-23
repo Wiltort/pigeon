@@ -9,6 +9,7 @@ from users.dependencies import get_current_user
 from users.models import User
 import asyncio
 import logging
+from notice_bot.tasks import send_telegram_notification
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 templates = Jinja2Templates(directory="templates")
@@ -42,6 +43,11 @@ async def notify_user(user_id: int, message: dict):
         websocket = active_connections[user_id]
         # Отправляем сообщение в формате JSON
         await websocket.send_json(message)
+    else:
+        user = await UsersDAO.find_one_or_none(id=user_id)
+        if user and user.telegram:
+            send_telegram_notification.delay(user.telegram, message.text)
+
 
 
 async def notify_all_users(message: dict):
