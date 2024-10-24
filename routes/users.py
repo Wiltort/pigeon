@@ -12,6 +12,8 @@ from users.auth import get_password_hash, authenticate_user, create_access_token
 from users.dao import UsersDAO
 from users.schemas import SUserRegister, SUserAuth
 from routes.chat import notify_all_users
+from database.connection import async_session_maker
+from sqlalchemy.exc import SQLAlchemyError
 
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
@@ -29,12 +31,22 @@ async def register_user(user_data: SUserRegister) -> dict:
     if user_data.telegram[0] != "@":
         raise IncorrectTelegramException()
     hashed_password = get_password_hash(user_data.password)
-    new_user = await UsersDAO.add(
-        username=user_data.username,
-        email=user_data.email,
-        password=hashed_password,
-        telegram=user_data.telegram,
-    )
+    async with async_session_maker() as session:
+        async with session.begin():
+            new_user = User(
+                username=user_data.username,
+                email=user_data.email,
+                password=hashed_password,
+                telegram=user_data.telegram,
+            )
+            session.add(new_user)
+            try:
+                await session.commit()
+                # Refresh the instance to ensure it's up-to-date
+                await session.refresh(new_user)
+            except SQLAlchemyError as e:
+                await session.rollback()
+                raise e
     new_user_data = {
         'id': new_user.id,
         'username': new_user.username,
