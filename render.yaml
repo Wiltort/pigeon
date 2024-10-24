@@ -2,7 +2,7 @@ services:
   - type: web
     name: pigeon-chat
     env: python
-    buildCommand: "pip install -r requirements.txt"
+    buildCommand: "pip install -r requirements.txt & pip install aiosqlite"
     startCommand: "alembic upgrade head & python3 main.py"
     envVars:
       - key: DATABASE_URL
