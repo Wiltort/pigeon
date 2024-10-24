@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from routes.exceptions import TokenExpiredException, TokenNoFoundException
 from routes.users import router as users_router
 from routes.chat import router as chat_router
-from notice_bot.tasks import dp, bot, init_db
+from notice_bot.tasks import dp, bot
 
 
 app = FastAPI()
