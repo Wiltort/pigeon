@@ -27,7 +27,6 @@ async def init_db():
         await db.commit()
 
 
-@router.message(Command=["start"])
 async def start_command(message: Message):
     user_id = message.from_user.id
     username = message.from_user.username
@@ -39,7 +38,7 @@ async def start_command(message: Message):
 
     await message.reply("Ваши данные сохранены.")
 
-# router.message.register(start_command, Command(commands=["start"]))
+router.message.register(start_command, Command(commands=["start"]))
 dp.include_router(router)
 
 
