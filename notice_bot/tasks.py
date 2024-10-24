@@ -54,5 +54,3 @@ async def send_telegram_notification(username: str, message: str):
     user_id = get_user_id_by_username(username=username[1:])
     await bot.send_message(chat_id=user_id, text=message)
 
-import asyncio
-asyncio.run(init_db())

@@ -8,7 +8,7 @@ from fastapi.staticfiles import StaticFiles
 from routes.exceptions import TokenExpiredException, TokenNoFoundException
 from routes.users import router as users_router
 from routes.chat import router as chat_router
-from notice_bot.tasks import dp, bot
+from notice_bot.tasks import dp, bot, init_db
 
 
 app = FastAPI()
@@ -47,6 +47,7 @@ async def token_no_found_exception_handler(request: Request, exc: HTTPException)
 
 
 async def start_bot():
+
     await dp.start_polling(bot)
 
 
