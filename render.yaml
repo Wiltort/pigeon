@@ -3,7 +3,7 @@ services:
     name: pigeon-chat
     env: python
     buildCommand: "pip install -r requirements.txt"
-    startCommand: "python3 main.py"
+    startCommand: "alembic upgrade head & python3 main.py"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
